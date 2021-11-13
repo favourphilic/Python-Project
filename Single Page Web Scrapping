@@ -1,0 +1,55 @@
+from bs4 import BeautifulSoup 
+import requests
+url = "https://www.pararius.com/apartments/nederland?ac=1"
+page = requests.get(url)
+from csv import writer
+#import writer to enable you import into a csv table.
+print(page)
+
+
+
+
+
+#create an Object soup with two arguments.
+#Remember to use underscore with class name.
+soup = BeautifulSoup(page.content, 'html.parser')
+
+lists = soup.find_all('section', class_="listing-search-item")
+
+
+
+
+
+
+
+
+
+#looping through the list.
+#Using "'.text'" will remove all the tags around whatevea yu want to print
+#Using '.replace('\n', '') will replace all the \n with empty'
+
+#2.write this part after the loop.
+with open('apartment.csv','w', encoding='utf8', newline='') as f:
+    thewriter = writer(f)
+    header = ['Title','Location', 'Price', 'Area']
+    thewriter.writerow(header)
+    
+    #1a.write thgis part first.
+    for list in lists:
+        title = list.find('a', class_="listing-search-item__link--title").text.replace('\n', '')
+        location = list.find('div', class_="listing-search-item__location").text.replace('\n', '')
+        price = list.find('div', class_="listing-search-item__price").text.replace('\n', '')
+        area = list.find('li', class_="illustrated-features__item--surface-area").text.replace('\n', '')
+        info = [title, location, price, area]
+        #1b.print(info)
+        
+        #3.write this part after the 'write open' and disable the 'print(info)'
+        thewriter.writerow(info)
+       
+       
+        
+ #With the above code, i can successfully srapp a single page of a web, den go and repeat the code on another page.
+#YET: I am yet to know how to automatically scrapp from one page to another using a single code.
+#The class attribute is a speacial attribute, cuz multiple words defined in the value of class can be individually searchable
+#This is not the same for other attributes.       
+        
